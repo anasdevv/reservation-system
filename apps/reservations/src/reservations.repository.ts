@@ -1,6 +1,6 @@
 import { AbstractRepository } from '@app/common';
 import { Injectable, Logger } from '@nestjs/common';
-import { ReservationDocument } from './models/reservation.model';
+import { ReservationDocument } from './models/reservation.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
