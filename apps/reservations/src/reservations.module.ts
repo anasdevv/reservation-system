@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ReservationsController } from './reservations.controller';
 import { ReservationsService } from './reservations.service';
-import { DatabaseModule, LoggerModule } from '@app/common';
+import { AUTH_SERVICE, DatabaseModule, LoggerModule } from '@app/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import {
   ReservationDocument,
   ReservationSchema,
@@ -26,6 +27,16 @@ import * as Joi from 'joi';
         MONGODB_URI: Joi.string().required(),
       }),
     }),
+    ClientsModule.register([
+      {
+        name: 'auth',
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: 3033,
+        },
+      },
+    ]),
   ],
   controllers: [ReservationsController],
   providers: [ReservationsService, ReservationsRepository],

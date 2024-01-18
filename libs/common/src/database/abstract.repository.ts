@@ -13,7 +13,9 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     return (await createdDocument.save()).toJSON() as unknown as TDocument;
   }
   async findOne(filterQuery: FilterQuery<TDocument>): Promise<TDocument> {
+    console.log('findOne ', filterQuery);
     const document = await this.model.findOne(filterQuery, {}, { lean: true });
+    this.logger.verbose(`findOne: ${JSON.stringify(document)}`);
     if (!document) {
       this.logger.warn(`Document not found: ${JSON.stringify(filterQuery)}`);
       throw new NotFoundException('Document not found');
