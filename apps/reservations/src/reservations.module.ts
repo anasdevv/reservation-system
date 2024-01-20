@@ -8,7 +8,7 @@ import {
   ReservationSchema,
 } from './models/reservation.schema';
 import { ReservationsRepository } from './reservations.repository';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 
 @Module({
@@ -27,14 +27,28 @@ import * as Joi from 'joi';
         MONGODB_URI: Joi.string().required(),
       }),
     }),
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
         name: 'auth',
-        transport: Transport.TCP,
-        options: {
-          host: 'localhost',
-          port: 3033,
-        },
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: 'localhost',
+            port: configService.get('AUTH_MICROSERVICE_PORT'),
+          },
+        }),
+        inject: [ConfigService],
+      },
+      {
+        name: 'payments',
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: 'localhost',
+            port: configService.get('PAYMENTS_MICROSERVICE_PORT'),
+          },
+        }),
+        inject: [ConfigService],
       },
     ]),
   ],
