@@ -12,8 +12,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
   async login(user: UserDocument, response: Response) {
+    console.log('user ', user);
     const tokenPayload: TokenPayload = {
-      userId: user._id.toHexString(),
+      userId: user?._id?.toHexString(),
     };
     const expires = new Date();
     expires.setSeconds(
